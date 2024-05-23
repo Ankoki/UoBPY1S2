@@ -12,8 +12,14 @@ javafx {
     modules = [ 'javafx.controls', 'javafx.fxml' ]
 }
 
+run {
+    jvmArgs = [
+            "--add-opens=javafx.graphics/javafx.scene=ALL-UNNAMED"
+    ]
+}
+
 application {
-    mainClassName = 'us.byeol.uobpyonestwo.Main'
+    mainClassName = 'us.byeol.uobpyonestwo.breakout.Main'
 }
 
 jar {
