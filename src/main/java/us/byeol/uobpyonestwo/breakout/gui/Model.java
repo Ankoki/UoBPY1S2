@@ -88,12 +88,12 @@ public class Model {
             Model.BRICK_WIDTH *= 2;
         this.ball = new GameObj(width / (options.isSinglePlayer() ? 2 : 3), height / 2, BALL_SIZE, BALL_SIZE, Color.RED);
         this.bat = new GameObj(width / (options.isSinglePlayer() ? 2 : 3), height - BRICK_HEIGHT * 3 / 2, BRICK_WIDTH * 2,
-                BRICK_HEIGHT / 4, Color.PINK);
+                BRICK_HEIGHT / 4, Color.valueOf("6F4E37"));
         if (!options.isSinglePlayer()) {
             this.secondBall = new GameObj((width / 3) * 2, height / 2, BALL_SIZE, BALL_SIZE, Color.BLUE);
             this.secondBall.changeDirection(Direction.X);
             this.secondBat = new GameObj((width / 3) * 2, height - BRICK_HEIGHT * 3 / 2, BRICK_WIDTH * 2,
-                    BRICK_HEIGHT / 4, Color.LIGHTBLUE);
+                    BRICK_HEIGHT / 4, Color.valueOf("503C3C"));
         }
         int amount = width / BRICK_WIDTH;
         this.bottomLayer = new GameObj[amount];
@@ -155,7 +155,7 @@ public class Model {
         if (x <= B)
             ball.changeDirection(Direction.X);
         if (y >= height - B - BALL_SIZE) {
-            this.view.showEndgame(this.score, -1);
+            Platform.runLater(() -> this.view.showEndgame(this.score, -1, this.options));
             this.setState(State.FINISHED);
             return;
         }
@@ -170,7 +170,7 @@ public class Model {
             if (x <= B)
                 secondBall.changeDirection(Direction.X);
             if (y >= height - B - BALL_SIZE) {
-                this.view.showEndgame(this.score, -1);
+                Platform.runLater(() -> this.view.showEndgame(this.score, -1, this.options));
                 this.setState(State.FINISHED);
                 return;
             }
@@ -180,7 +180,7 @@ public class Model {
 
         boolean hit = false;
         for (GameObj brick : this.getBricks()) {
-            if (brick.isVisible() && (brick.hitBy(ball)) || (!this.options.isSinglePlayer() && brick.hitBy(secondBall))) {
+            if ((brick.isVisible() && brick.hitBy(ball)) || (!this.options.isSinglePlayer() && brick.hitBy(secondBall))) {
                 hit = true;
                 if (brick.damage()) {
                     if (brick.hitBy(ball))
@@ -190,7 +190,7 @@ public class Model {
                 }
                 if (this.getBricksLeft() <= 0) {
                     this.setState(State.FINISHED);
-                    this.view.showEndgame(this.score, this.secondPlayerScore);
+                    Platform.runLater(() -> this.view.showEndgame(this.score, this.secondPlayerScore, this.options));
                 }
             }
         }
@@ -203,7 +203,7 @@ public class Model {
             if (ball.hitBy(secondBat))
                 ball.changeDirection(Direction.Y);
             if (secondBall.hitBy(bat) || secondBall.hitBy(secondBat))
-                ball.changeDirection(Direction.Y);
+                secondBall.changeDirection(Direction.Y);
         }
     }
 
