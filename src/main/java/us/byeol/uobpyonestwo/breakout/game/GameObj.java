@@ -4,6 +4,7 @@ import javafx.scene.paint.Color;
 import javafx.scene.paint.LinearGradient;
 import javafx.scene.paint.Paint;
 import javafx.scene.paint.Stop;
+import us.byeol.uobpyonestwo.breakout.Main;
 import us.byeol.uobpyonestwo.breakout.game.enums.Direction;
 
 import java.awt.*;
@@ -80,6 +81,15 @@ public class GameObj {
      */
     public int getX() {
         return this.topX;
+    }
+
+    /**
+     * Sets the X location of this object.
+     *
+     * @param x the new x location.
+     */
+    public void setX(int x) {
+        this.topX = x;
     }
 
     /**
@@ -169,6 +179,10 @@ public class GameObj {
      * @param units the units to move the objective by.
      */
     public void move(Direction direction, int units) {
+        if (units < 0 && this.getX() <= 0)
+            return;
+        if (units > 0 && this.getX() >= Main.GAME_WIDTH - this.width)
+            return;
         if (direction == Direction.X)
             topX += units * dirX;
         else

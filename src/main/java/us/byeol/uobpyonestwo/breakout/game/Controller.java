@@ -3,11 +3,13 @@ package us.byeol.uobpyonestwo.breakout.game;
 import javafx.scene.input.KeyEvent;
 import us.byeol.uobpyonestwo.breakout.game.enums.State;
 import us.byeol.uobpyonestwo.breakout.gui.Model;
+import us.byeol.uobpyonestwo.breakout.gui.View;
 import us.byeol.uobpyonestwo.breakout.misc.Debug;
 
 public class Controller {
 
     private Model model;
+    private View view;
 
     /**
      * Creates a new controller [we specify this for debugging purposes].
@@ -23,6 +25,15 @@ public class Controller {
      */
     public void setModel(Model model) {
         this.model = model;
+    }
+
+    /**
+     * Sets the view for this controller.
+     *
+     * @param view the view.
+     */
+    public void setView(View view) {
+        this.view = view;
     }
 
     /**
@@ -43,10 +54,6 @@ public class Controller {
                     model.moveSecondBat(2);
             case F ->
                     model.setFast(true);
-            case N ->
-                    model.setFast(false);
-            case S ->
-                    model.setState(State.FINISHED);
         }
     }
 

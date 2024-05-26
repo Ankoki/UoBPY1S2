@@ -9,6 +9,8 @@ import us.byeol.uobpyonestwo.breakout.misc.Debug;
 
 public class Main extends Application {
 
+    public static final int GAME_WIDTH = 1000;
+    public static final int GAME_HEIGHT = 750;
     private static Stage primaryStage;
 
     /**
@@ -20,12 +22,13 @@ public class Main extends Application {
         return Main.primaryStage;
     }
 
-    private static final int GAME_WIDTH = 1000;
-    private static final int GAME_HEIGHT = 750;
-
     public static void main(String[] args) {
         Application.launch(args);
     }
+
+    private final Model model = new Model(GAME_WIDTH, GAME_HEIGHT);;
+    private final View view = new View(GAME_WIDTH, GAME_HEIGHT);
+    private final Controller controller = new Controller();
 
     /**
      * Starts our application.
@@ -39,16 +42,13 @@ public class Main extends Application {
         Debug.trace("Main::start: Breakout starting");
         Main.primaryStage = window;
         window.setResizable(false);
-        Model model = new Model(GAME_WIDTH, GAME_HEIGHT);
-        View view = new View(GAME_WIDTH, GAME_HEIGHT);
-        Controller controller = new Controller();
         // Links all our handlers together.
         model.setView(view);
         model.setController(controller);
         view.setModel(model);
         view.setController(controller);
         controller.setModel(model);
-
+        controller.setView(view);
         view.showMenu();
         Debug.trace("Main::start: Breakout running");
     }

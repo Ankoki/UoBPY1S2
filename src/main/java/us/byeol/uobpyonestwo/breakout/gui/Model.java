@@ -9,20 +9,19 @@ import us.byeol.uobpyonestwo.breakout.game.enums.GameOptions;
 import us.byeol.uobpyonestwo.breakout.game.enums.State;
 import us.byeol.uobpyonestwo.breakout.misc.Debug;
 
+import java.util.Random;
+
 public class Model {
 
     private static final int B = 6;
     private static final int M = 40;
 
     private static final int BALL_SIZE = 30;
-    private static int BRICK_WIDTH = 50; // This is not static so that we can make it easier to access hard mode.
+    private static int BRICK_WIDTH = 25; // This is not final so that we can make it easier to access hard mode.
     private static final int BRICK_HEIGHT = 50;
 
     private static final int BAT_MOVE = 5;
     private static final int BALL_MOVE = 3;
-
-    private static final int HIT_BRICK = 50;
-    private static final int HIT_BOTTOM = -200;
 
     private View view;
     private Controller controller;
@@ -87,13 +86,14 @@ public class Model {
         if (options.isEasy())
             Model.BRICK_WIDTH *= 2;
         this.ball = new GameObj(width / (options.isSinglePlayer() ? 2 : 3), height / 2, BALL_SIZE, BALL_SIZE, Color.RED);
+        this.ball.setX(new Random().nextInt(0, this.width - (BALL_SIZE + 1)));
         this.bat = new GameObj(width / (options.isSinglePlayer() ? 2 : 3), height - BRICK_HEIGHT * 3 / 2, BRICK_WIDTH * 2,
-                BRICK_HEIGHT / 4, Color.valueOf("6F4E37"));
+                BRICK_HEIGHT / 4, Color.valueOf("e8a598"));
         if (!options.isSinglePlayer()) {
             this.secondBall = new GameObj((width / 3) * 2, height / 2, BALL_SIZE, BALL_SIZE, Color.BLUE);
             this.secondBall.changeDirection(Direction.X);
             this.secondBat = new GameObj((width / 3) * 2, height - BRICK_HEIGHT * 3 / 2, BRICK_WIDTH * 2,
-                    BRICK_HEIGHT / 4, Color.valueOf("503C3C"));
+                    BRICK_HEIGHT / 4, Color.valueOf("fec89a"));
         }
         int amount = width / BRICK_WIDTH;
         this.bottomLayer = new GameObj[amount];
@@ -102,25 +102,27 @@ public class Model {
         for (int i = 0; i < amount; i++)
             bottomLayer[i] = new GameObj(BRICK_WIDTH * i, 200, BRICK_WIDTH, BRICK_HEIGHT,
                     new LinearGradient(0, 0, 0.2, 1.4, true, CycleMethod.NO_CYCLE,
-                            new Stop(0.1, Color.rgb(0, 0, 255)),
-                            new Stop(0.9, Color.rgb(0, 200, 255))),
+                            new Stop(0.1, Color.valueOf("a2d2ff")),
+                            new Stop(0.4, Color.valueOf("bde0fe")),
+                            new Stop(0.5, Color.valueOf("a2d2ff"))),
                     50, 1);
         for (int i = 0; i < amount; i++)
             middleLayer[i] = new GameObj(BRICK_WIDTH * i, 150, BRICK_WIDTH, BRICK_HEIGHT,
                     new LinearGradient(0, 0, 0.2, 1.4, true, CycleMethod.NO_CYCLE,
-                            new Stop(0.1, Color.rgb(56, 137, 59)),
-                            new Stop(0.9, Color.rgb(138, 185, 127))),
+                            new Stop(0.1, Color.valueOf("93ff96")),
+                            new Stop(0.4, Color.valueOf("d0ffb7")),
+                            new Stop(0.5, Color.valueOf("93ff96"))),
                     100, 2);
         for (int i = 0; i < amount; i++)
             topLayer[i] = new GameObj(BRICK_WIDTH * i, 100, BRICK_WIDTH, BRICK_HEIGHT,
                     new LinearGradient(0, 0, 0.2, 1.4, true, CycleMethod.NO_CYCLE,
-                            new Stop(0.1, Color.rgb(200, 43, 43)),
-                            new Stop(0.9, Color.rgb(174, 125, 125))),
+                            new Stop(0.1, Color.valueOf("f191ac")),
+                            new Stop(0.4, Color.valueOf("f4bbc9")),
+                            new Stop(0.5, Color.valueOf("f191ac"))),
                     200, 3);
-        if (options.isSinglePlayer())
+        if (!options.isEasy())
             Model.BRICK_WIDTH /= 2;
     }
-
 
     /**
      * Runs the game and starts the loop.
@@ -214,12 +216,8 @@ public class Model {
      */
     public int getBricksLeft() {
         int visible = 0;
-        for (GameObj objective : this.getBottomLayer())
-            visible = visible + (objective.isVisible() ? 0 : 1);
-        for (GameObj objective : this.getMiddleLayer())
-            visible = visible + (objective.isVisible() ? 0 : 1);
-        for (GameObj objective : this.getTopLayer())
-            visible = visible + (objective.isVisible() ? 0 : 1);
+        for (GameObj objective : this.getBricks())
+            visible += (objective.isVisible() ? 1 : 0);
         return visible;
     }
 
@@ -366,6 +364,15 @@ public class Model {
     }
 
     /**
+     * Gets the second player's score of this game.
+     *
+     * @return the second player's score.
+     */
+    public synchronized int getSecondScore() {
+        return this.secondPlayerScore;
+    }
+
+    /**
      * Increases the score by the given amount.
      *
      * @param increase the amount.
@@ -404,7 +411,8 @@ public class Model {
             return;
         int dist = direction * BAT_MOVE;
         Debug.trace("us.byeol.uobpyonestwo.breakout.gui.Model::moveBat: Move bat = " + dist);
-        secondBat.move(Direction.X, dist);
+        if (secondBat.getX() >= 0 && secondBat.getX() <= this.width)
+            secondBat.move(Direction.X, dist);
     }
 
 }   

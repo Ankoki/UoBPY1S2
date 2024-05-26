@@ -29,8 +29,8 @@ import java.util.concurrent.ConcurrentHashMap;
 public class View implements EventHandler<KeyEvent> {
 
     private static final Paint BACKGROUND_GRADIENT = new LinearGradient(0, 0, 0.2, 1.4, true, CycleMethod.NO_CYCLE,
-                    new Stop(0.1, Color.rgb(166, 123, 91)),
-                    new Stop(0.9, Color.rgb(254, 216, 177)));
+                    new Stop(0.2, Color.valueOf("23242c")),
+                    new Stop(0.8, Color.valueOf("33363d")));
     private static final File DATA_FILE;
 
     static {
@@ -96,10 +96,12 @@ public class View implements EventHandler<KeyEvent> {
         this.menuPane.setId("Menu");
         this.menuPane.getChildren().add(canvas);
         Label title = new Label(": BREAKOUT :");
-        Button play = new Button("Play Single-Player Easy");
-        Button playHard = new Button("Play Single-Player Hard");
-        Button twoPlayer = new Button("Play Two-Player Easy");
-        Button twoPlayerHard = new Button("Play Two-Player Hard");
+        Label singlePlayer = new Label("Single-Player");
+        Label twoPlayerText = new Label("Two-Player");
+        Button play = new Button("Easy");
+        Button playHard = new Button("Hard");
+        Button twoPlayer = new Button("Easy");
+        Button twoPlayerHard = new Button("Hard");
         Label highScore = new Label("High Score - " + this.highScore);
         title.setFont(Font.font("Segoe UI", FontWeight.BOLD, 75));
         title.setLayoutX((this.width / 2D) - 100);
@@ -129,12 +131,14 @@ public class View implements EventHandler<KeyEvent> {
         twoPlayerHard.setTranslateY(450);
         twoPlayerHard.setMinSize(500, 75);
         twoPlayerHard.setOnMouseClicked(event -> this.showGame(GameOptions.TWO_PLAYER_HARD));
-        this.menuPane.getChildren().add(title);
-        this.menuPane.getChildren().add(play);
-        this.menuPane.getChildren().add(playHard);
-        this.menuPane.getChildren().add(twoPlayer);
-        this.menuPane.getChildren().add(twoPlayerHard);
-        this.menuPane.getChildren().add(highScore);
+        this.menuPane.getChildren().addAll(title,
+                                        play,
+                                        singlePlayer,
+                                        twoPlayerText,
+                                        playHard,
+                                        twoPlayer,
+                                        twoPlayerHard,
+                                        highScore);
         Main.getPrimaryStage().setScene(this.menuScene);
         Main.getPrimaryStage().show();
     }
@@ -155,6 +159,7 @@ public class View implements EventHandler<KeyEvent> {
         this.breakoutPane.setBackground(new Background(new BackgroundFill(View.BACKGROUND_GRADIENT, null, null)));
         Main.getPrimaryStage().setScene(this.breakoutScene);
         Main.getPrimaryStage().show();
+        this.model.initialiseGame(options);
         this.model.startGame(options);
     }
 
