@@ -17,6 +17,7 @@ public class Model {
     private static final int M = 40;
 
     private static final int BALL_SIZE = 30;
+    private static final int ORIGINAL_BRICK_WIDTH = 25;
     private static int BRICK_WIDTH = 25; // This is not final so that we can make it easier to access hard mode.
     private static final int BRICK_HEIGHT = 50;
 
@@ -34,7 +35,6 @@ public class Model {
     private GameObj bat;
     private GameObj secondBat;
     private int score = 0;
-    private int secondPlayerScore = 0;
     private GameOptions options;
 
     private State state = State.IDLE;
@@ -82,7 +82,7 @@ public class Model {
     public void initialiseGame(GameOptions options) {
         this.options = options;
         this.score = 0;
-        this.secondPlayerScore = 0;
+        Model.BRICK_WIDTH = Model.ORIGINAL_BRICK_WIDTH;
         if (options.isEasy())
             Model.BRICK_WIDTH *= 2;
         this.ball = new GameObj(width / (options.isSinglePlayer() ? 2 : 3), height / 2, BALL_SIZE, BALL_SIZE, Color.RED);
@@ -157,7 +157,7 @@ public class Model {
         if (x <= B)
             ball.changeDirection(Direction.X);
         if (y >= height - B - BALL_SIZE) {
-            Platform.runLater(() -> this.view.showEndgame(this.score, -1, this.options));
+            Platform.runLater(() -> this.view.showEndgame(this.score, this.options));
             this.setState(State.FINISHED);
             return;
         }
@@ -172,7 +172,7 @@ public class Model {
             if (x <= B)
                 secondBall.changeDirection(Direction.X);
             if (y >= height - B - BALL_SIZE) {
-                Platform.runLater(() -> this.view.showEndgame(this.score, -1, this.options));
+                Platform.runLater(() -> this.view.showEndgame(this.score, this.options));
                 this.setState(State.FINISHED);
                 return;
             }
@@ -181,18 +181,16 @@ public class Model {
         }
 
         boolean hit = false;
+        boolean secondBallHit = false;
         for (GameObj brick : this.getBricks()) {
             if ((brick.isVisible() && brick.hitBy(ball)) || (!this.options.isSinglePlayer() && brick.hitBy(secondBall))) {
                 hit = true;
-                if (brick.damage()) {
-                    if (brick.hitBy(ball))
-                        this.increaseScore(brick.getValue());
-                    else
-                        this.increaseSecondPlayerScore(brick.getValue());
-                }
+                secondBallHit = true;
+                if (brick.damage())
+                    this.increaseScore(brick.getValue());
                 if (this.getBricksLeft() <= 0) {
                     this.setState(State.FINISHED);
-                    Platform.runLater(() -> this.view.showEndgame(this.score, this.secondPlayerScore, this.options));
+                    Platform.runLater(() -> this.view.showEndgame(this.score, this.options));
                 }
             }
         }
@@ -205,6 +203,8 @@ public class Model {
             if (ball.hitBy(secondBat))
                 ball.changeDirection(Direction.Y);
             if (secondBall.hitBy(bat) || secondBall.hitBy(secondBat))
+                secondBall.changeDirection(Direction.Y);
+            if (secondBallHit)
                 secondBall.changeDirection(Direction.Y);
         }
     }
@@ -364,30 +364,12 @@ public class Model {
     }
 
     /**
-     * Gets the second player's score of this game.
-     *
-     * @return the second player's score.
-     */
-    public synchronized int getSecondScore() {
-        return this.secondPlayerScore;
-    }
-
-    /**
      * Increases the score by the given amount.
      *
      * @param increase the amount.
      */
     public synchronized void increaseScore(int increase) {
         score += increase;
-    }
-
-    /**
-     * Increases the score by the given amount.
-     *
-     * @param increase the amount.
-     */
-    public synchronized void increaseSecondPlayerScore(int increase) {
-        secondPlayerScore += increase;
     }
 
     /**

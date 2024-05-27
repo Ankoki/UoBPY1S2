@@ -1,12 +1,17 @@
 package us.byeol.uobpyonestwo.breakout.gui;
 
 import javafx.event.EventHandler;
+import javafx.geometry.Pos;
+import javafx.scene.canvas.Canvas;
+import javafx.scene.control.Button;
+import javafx.scene.control.Label;
 import javafx.scene.input.*;
 import javafx.scene.canvas.*;
-import javafx.scene.control.*;
 import javafx.scene.layout.*;
 import javafx.scene.paint.*;
 import javafx.scene.Scene;
+import javafx.scene.paint.Color;
+import javafx.scene.paint.Paint;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
 import javafx.scene.text.Text;
@@ -41,13 +46,14 @@ public class View implements EventHandler<KeyEvent> {
     private final int width,
                     height;
 
-    private final Pane breakoutPane = new Pane(),
-                        menuPane = new Pane(),
-                        endgamePane = new Pane();
+    private final Pane breakoutPane = new StackPane(),
+                        menuPane = new StackPane(),
+                        endgamePane = new StackPane();
     private final Scene breakoutScene = new Scene(this.breakoutPane),
                         menuScene = new Scene(this.menuPane),
                         endgameScene = new Scene(this.endgamePane);
-    private final Canvas canvas;
+    private final Canvas canvas,
+                         gameCanvas;
     private final Text scoreText = new Text();
     private int highScore;
 
@@ -59,6 +65,7 @@ public class View implements EventHandler<KeyEvent> {
         this.width = width;
         this.height = height;
         this.canvas = new Canvas(this.width, this.height);
+        this.gameCanvas = new Canvas(this.width, this.height);
         this.breakoutPane.setMinSize(this.width, this.height);
         this.breakoutPane.setMaxSize(this.width, this.height);
         this.scoreText.setId("score");
@@ -87,6 +94,41 @@ public class View implements EventHandler<KeyEvent> {
     public void setModel(Model model) {
         this.model = model;
     }
+
+    /**
+     * Creates a new label.
+     *
+     * @param text the text to use.
+     * @param size the size of the text.
+     * @param bold whether it should be bold or not
+     * @return the new label.
+     */
+    public Label createLabel(String text, int size, boolean bold) {
+        Label label = new Label(text);
+        label.setStyle("-fx-font: " + size + " monospaced;" + (bold ? "-fx-font-weight: bold;" : ""));
+        label.setTextAlignment(TextAlignment.CENTER);
+        label.setTextFill(Color.WHITE);
+        StackPane.setAlignment(label, Pos.TOP_CENTER);
+        return label;
+    }
+
+    /**
+     * Creates a new button.
+     *
+     * @param text the text.
+     * @param size the size of the text.
+     * @param onClick what to do when the button is clicked.
+     * @return the button.
+     */
+    public Button createButton(String text, int size, Runnable onClick) {
+        Button button = new Button(text);
+        button.setStyle("-fx-font: " + size + " monospaced; -fx-border-radius: 15px 50px 15px 50px; -fx-background-color: #6d6875;");
+        button.setTextFill(Color.WHITE);
+        button.setMinSize(150, 50);
+        button.setOnMouseClicked(event -> onClick.run());
+        StackPane.setAlignment(button, Pos.TOP_LEFT);
+        return button;
+    }
     
     /**
      * Shows the menu screen.
@@ -95,50 +137,35 @@ public class View implements EventHandler<KeyEvent> {
         this.wipeCanvas();
         this.menuPane.setId("Menu");
         this.menuPane.getChildren().add(canvas);
-        Label title = new Label(": BREAKOUT :");
-        Label singlePlayer = new Label("Single-Player");
-        Label twoPlayerText = new Label("Two-Player");
-        Button play = new Button("Easy");
-        Button playHard = new Button("Hard");
-        Button twoPlayer = new Button("Easy");
-        Button twoPlayerHard = new Button("Hard");
-        Label highScore = new Label("High Score - " + this.highScore);
-        title.setFont(Font.font("Segoe UI", FontWeight.BOLD, 75));
-        title.setLayoutX((this.width / 2D) - 100);
-        title.setTextAlignment(TextAlignment.CENTER);
+        Label title = this.createLabel("[ = BREAKOUT = ]", 100, true);
         title.setTranslateY(50);
-        play.setFont(Font.font("Segoe UI", FontWeight.BOLD, 50));
-        play.setLayoutX((this.width / 2D) - 300);
-        play.setTextAlignment(TextAlignment.CENTER);
-        play.setTranslateY(150);
-        play.setMinSize(500, 75);
-        play.setOnMouseClicked(event -> this.showGame(GameOptions.EASY));
-        playHard.setFont(Font.font("Segoe UI", FontWeight.BOLD, 50));
-        playHard.setLayoutX((this.width / 2D) - 308);
-        playHard.setTextAlignment(TextAlignment.CENTER);
-        playHard.setTranslateY(250);
-        playHard.setMinSize(500, 75);
-        playHard.setOnMouseClicked(event -> this.showGame(GameOptions.HARD));
-        twoPlayer.setFont(Font.font("Segoe UI", FontWeight.BOLD, 50));
-        twoPlayer.setLayoutX((this.width / 2D) - 285);
-        twoPlayer.setTextAlignment(TextAlignment.CENTER);
-        twoPlayer.setTranslateY(350);
-        twoPlayer.setMinSize(500, 75);
-        twoPlayer.setOnMouseClicked(event -> this.showGame(GameOptions.TWO_PLAYER_EASY));
-        twoPlayerHard.setFont(Font.font("Segoe UI", FontWeight.BOLD, 50));
-        twoPlayerHard.setLayoutX((this.width / 2D) - 293);
-        twoPlayerHard.setTextAlignment(TextAlignment.CENTER);
-        twoPlayerHard.setTranslateY(450);
-        twoPlayerHard.setMinSize(500, 75);
-        twoPlayerHard.setOnMouseClicked(event -> this.showGame(GameOptions.TWO_PLAYER_HARD));
+        Label singlePlayer = this.createLabel("Single-Player", 40, false);
+        singlePlayer.setTranslateY(200);
+        Button singlePlayerEasy = this.createButton("Easy", 20, () -> this.showGame(GameOptions.EASY));
+        singlePlayerEasy.setTranslateY(300);
+        singlePlayerEasy.setTranslateX((this.width / 3D) + 10);
+        Button singlePlayerHard = this.createButton("Hard", 20, () -> this.showGame(GameOptions.HARD));
+        singlePlayerHard.setTranslateY(300);
+        singlePlayerHard.setTranslateX(((this.width / 4D) * 2) + 10);
+        Label twoPlayer = this.createLabel("Two-Player", 40, false);
+        twoPlayer.setTranslateY(400);
+        Button twoPlayerEasy = this.createButton("Easy", 20, () -> this.showGame(GameOptions.TWO_PLAYER_EASY));
+        twoPlayerEasy.setTranslateY(500);
+        twoPlayerEasy.setTranslateX((this.width / 3D) + 10);
+        Button twoPlayerHard = this.createButton("Hard", 20, () -> this.showGame(GameOptions.TWO_PLAYER_HARD));
+        twoPlayerHard.setTranslateY(500);
+        twoPlayerHard.setTranslateX(((this.width / 4D) * 2) + 10);
+        Label highScore = this.createLabel("High Score\n" + this.highScore, 30, true);
+        highScore.setTranslateY(600);
         this.menuPane.getChildren().addAll(title,
-                                        play,
-                                        singlePlayer,
-                                        twoPlayerText,
-                                        playHard,
-                                        twoPlayer,
-                                        twoPlayerHard,
-                                        highScore);
+                                           singlePlayer,
+                                           singlePlayerEasy,
+                                           singlePlayerHard,
+                                           twoPlayer,
+                                           twoPlayerEasy,
+                                           twoPlayerHard,
+                                           highScore
+                                          );
         Main.getPrimaryStage().setScene(this.menuScene);
         Main.getPrimaryStage().show();
     }
@@ -149,8 +176,9 @@ public class View implements EventHandler<KeyEvent> {
      */
     public void showGame(GameOptions options) {
         this.wipeCanvas();
+        this.model.initialiseGame(options);
         this.breakoutPane.setId("Breakout");
-        this.breakoutPane.getChildren().add(canvas);
+        this.breakoutPane.getChildren().add(gameCanvas);
         this.scoreText.setText("0");
         this.scoreText.setFont(Font.font("Segoe UI", FontWeight.BOLD, 50));
         this.scoreText.setLayoutX(this.width / 2D);
@@ -159,7 +187,6 @@ public class View implements EventHandler<KeyEvent> {
         this.breakoutPane.setBackground(new Background(new BackgroundFill(View.BACKGROUND_GRADIENT, null, null)));
         Main.getPrimaryStage().setScene(this.breakoutScene);
         Main.getPrimaryStage().show();
-        this.model.initialiseGame(options);
         this.model.startGame(options);
     }
 
@@ -167,55 +194,50 @@ public class View implements EventHandler<KeyEvent> {
      * Shows the end game screen.
      * 
      * @param score the score.
-     * @param secondPlayerScore the second players score. If there is no second player, this will be -1.
      * @param options the options of the game that was played. This is so when you press 'play again' the same game mode will play.
      */
-    public void showEndgame(int score, int secondPlayerScore, GameOptions options) { // TODO pretty formatting.
+    public void showEndgame(int score, GameOptions options) {
+        boolean changed = false;
+        if (score > this.highScore) {
+            this.setHighScore(highScore);
+            changed = true;
+        }
         this.wipeCanvas();
         this.endgamePane.setId("Endgame");
         this.endgamePane.getChildren().add(canvas);
-        Text gameOver = new Text("Game Over!");
-        gameOver.setLayoutX(this.width / 2D);
-        this.endgamePane.getChildren().add(gameOver);
-        Text firstScore = new Text("" + score);
-        firstScore.setFont(Font.font("Segoe UI", FontWeight.BOLD, 50));
-        firstScore.setLayoutX(this.width / 2D);
+        Label title = this.createLabel("[ = GAME OVER = ]", 100, true);
+        title.setTranslateY(50);
+        Label firstScore = this.createLabel("Score", 40, true),
+              fsValue = this.createLabel("" + score, 40, false);
         firstScore.setTranslateY(200);
-        if (score > this.highScore)
-            this.setHighScore(score);
-        if (secondPlayerScore == -1 && !options.isSinglePlayer()) {
-            firstScore.setLayoutX(this.width / 4D);
-            Text secondScore = new Text("" + secondPlayerScore);
-            secondScore.setFont(Font.font("Segoe UI", FontWeight.BOLD, 50));
-            secondScore.setLayoutX((this.width / 4D) * 3);
-            secondScore.setTranslateY(400);
-            this.endgamePane.getChildren().add(secondScore);
-        }
-        this.endgamePane.getChildren().add(firstScore);
-        Button replay = new Button("Play Again");
-        replay.setLayoutX((this.width / 2D) - 308);
-        replay.setTextAlignment(TextAlignment.CENTER);
-        replay.setTranslateY(250);
-        replay.setMinSize(500, 75);
-        replay.setOnMouseClicked(event -> this.showGame(options));
-        this.endgamePane.getChildren().add(replay);
-        Button home = new Button("Home");
-        home.setFont(Font.font("Segoe UI", FontWeight.BOLD, 50));
-        home.setLayoutX((this.width / 2D) - 293);
-        home.setTextAlignment(TextAlignment.CENTER);
-        home.setTranslateY(450);
-        home.setMinSize(500, 75);
-        home.setOnMouseClicked(event -> this.showMenu());
-        this.endgamePane.getChildren().add(home);
+        fsValue.setTranslateY(250);
+        Button home = this.createButton("Home", 40, this::showMenu);
+        home.setTranslateY(400);
+        home.setTranslateX((this.width / 3D) + 10);
+        Button replay = this.createButton("Replay", 40, () -> this.showGame(options));
+        replay.setTranslateY(400);
+        replay.setTranslateX(((this.width / 4D) * 2) + 10);
+        Label highScore = this.createLabel((changed ? "New High Score!\n" : "High Score\n") + score, 40, changed);
+        highScore.setTranslateY(500);
+        this.endgamePane.getChildren().addAll(title,
+                                              firstScore,
+                                              fsValue,
+                                              home,
+                                              replay,
+                                              highScore
+                                             );
         Main.getPrimaryStage().setScene(this.endgameScene);
         Main.getPrimaryStage().show();
     }
 
     /**
-     * Wipes the canvas, setting it back to the original background radius.
+     * Wipes the canvas, setting it back to the original background gradient.
      */
     public void wipeCanvas() {
         GraphicsContext context = this.canvas.getGraphicsContext2D();
+        context.setFill(View.BACKGROUND_GRADIENT);
+        context.fillRect(0, 0, this.width, this.height);
+        context = this.gameCanvas.getGraphicsContext2D();
         context.setFill(View.BACKGROUND_GRADIENT);
         context.fillRect(0, 0, this.width, this.height);
         Main.getPrimaryStage().setScene(null);
@@ -238,7 +260,7 @@ public class View implements EventHandler<KeyEvent> {
      */
     public void drawPicture() {
         synchronized (model) { // This field is effectively final. We can ignore this warning.
-            GraphicsContext gc = canvas.getGraphicsContext2D();
+            GraphicsContext gc = gameCanvas.getGraphicsContext2D();
             gc.setFill(View.BACKGROUND_GRADIENT);
             gc.fillRect(0, 0, this.width, this.height);
             this.displayGameObj(gc, this.model.getBall());
@@ -250,7 +272,7 @@ public class View implements EventHandler<KeyEvent> {
             for (GameObj brick : this.model.getBricks())
                 if (brick.isVisible())
                     this.displayGameObj(gc, brick);
-            scoreText.setText("" + this.model.getScore()); // TODO Multiplayer Scores.
+            scoreText.setText("" + this.model.getScore());
         }
     }
 
