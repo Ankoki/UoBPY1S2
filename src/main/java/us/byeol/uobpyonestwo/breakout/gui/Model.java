@@ -87,7 +87,7 @@ public class Model {
             Model.BRICK_WIDTH *= 2;
         this.ball = new GameObj(width / (options.isSinglePlayer() ? 2 : 3), height / 2, BALL_SIZE, BALL_SIZE, Color.RED);
         this.ball.setX(new Random().nextInt(0, this.width - (BALL_SIZE + 1)));
-        this.bat = new GameObj(width / (options.isSinglePlayer() ? 2 : 3), height - BRICK_HEIGHT * 3 / 2, BRICK_WIDTH * 2,
+        this.bat = new GameObj(width / (options.isSinglePlayer() ? 2 : 3), height - BRICK_HEIGHT * 3 / 2, BRICK_WIDTH * 3,
                 BRICK_HEIGHT / 4, Color.valueOf("e8a598"));
         if (!options.isSinglePlayer()) {
             this.secondBall = new GameObj((width / 3) * 2, height / 2, BALL_SIZE, BALL_SIZE, Color.BLUE);

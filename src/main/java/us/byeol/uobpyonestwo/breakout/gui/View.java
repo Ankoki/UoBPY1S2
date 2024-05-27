@@ -199,7 +199,7 @@ public class View implements EventHandler<KeyEvent> {
     public void showEndgame(int score, GameOptions options) {
         boolean changed = false;
         if (score > this.highScore) {
-            this.setHighScore(highScore);
+            this.setHighScore(score);
             changed = true;
         }
         this.wipeCanvas();
@@ -217,7 +217,7 @@ public class View implements EventHandler<KeyEvent> {
         Button replay = this.createButton("Replay", 40, () -> this.showGame(options));
         replay.setTranslateY(400);
         replay.setTranslateX(((this.width / 4D) * 2) + 10);
-        Label highScore = this.createLabel((changed ? "New High Score!\n" : "High Score\n") + score, 40, changed);
+        Label highScore = this.createLabel((changed ? "New High Score!\n" : "High Score\n") + this.highScore, 40, changed);
         highScore.setTranslateY(500);
         this.endgamePane.getChildren().addAll(title,
                                               firstScore,
@@ -295,7 +295,7 @@ public class View implements EventHandler<KeyEvent> {
     public void setHighScore(int highScore) {
         this.highScore = highScore;
         this.data.put("high-score", "" + highScore);
-        this.saveData();
+        this.saveData().thenRun(() -> Debug.trace("High Score[" + highScore + "] saved. Data[high-score: " + this.data.getOrDefault("high-score", "0") + "]"));
     }
 
     /**
@@ -307,7 +307,7 @@ public class View implements EventHandler<KeyEvent> {
         return CompletableFuture.runAsync(() -> {
             try {
                 if (!View.DATA_FILE.exists()) {
-                    View.DATA_FILE.mkdirs();
+                    View.DATA_FILE.getParentFile().mkdirs();
                     this.saveData();
                 } else {
                     Scanner scanner = new Scanner(View.DATA_FILE);
@@ -319,7 +319,7 @@ public class View implements EventHandler<KeyEvent> {
                         this.data.put(raw[0], raw[1]);
                     }
                 }
-            } catch (IOException ex) { Debug.error(ex.getMessage()); }
+            } catch (IOException ex) { ex.printStackTrace(); }
         });
     }
 
@@ -342,7 +342,7 @@ public class View implements EventHandler<KeyEvent> {
                             writer.write(entry.getKey() + ": " + entry.getValue());
                     }
                 }
-            } catch (IOException ex) { Debug.error(ex.getMessage()); }
+            } catch (IOException ex) { ex.printStackTrace(); }
         });
     }
 

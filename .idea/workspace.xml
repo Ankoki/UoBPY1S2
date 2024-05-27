@@ -4,9 +4,8 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="350a621e-e176-4b9a-b2ac-83509138bb15" name="Changes" comment="Most things work.">
+    <list default="true" id="350a621e-e176-4b9a-b2ac-83509138bb15" name="Changes" comment="Finished.">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/us/byeol/uobpyonestwo/breakout/gui/Model.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/us/byeol/uobpyonestwo/breakout/gui/Model.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/us/byeol/uobpyonestwo/breakout/gui/View.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/us/byeol/uobpyonestwo/breakout/gui/View.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -256,7 +255,14 @@
       <option name="project" value="LOCAL" />
       <updated>1716684731486</updated>
     </task>
-    <option name="localTasksCounter" value="6" />
+    <task id="LOCAL-00006" summary="Finished.">
+      <created>1716837332029</created>
+      <option name="number" value="00006" />
+      <option name="presentableId" value="LOCAL-00006" />
+      <option name="project" value="LOCAL" />
+      <updated>1716837332029</updated>
+    </task>
+    <option name="localTasksCounter" value="7" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -276,7 +282,8 @@
     <MESSAGE value="Seperate ATM project and Breakout project, massive additions to breakout." />
     <MESSAGE value="Model and View work." />
     <MESSAGE value="Most things work." />
-    <option name="LAST_COMMIT_MESSAGE" value="Most things work." />
+    <MESSAGE value="Finished." />
+    <option name="LAST_COMMIT_MESSAGE" value="Finished." />
   </component>
   <component name="XSLT-Support.FileAssociations.UIState">
     <expand />
