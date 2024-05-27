@@ -44,7 +44,6 @@ public class Main extends Application {
         window.setResizable(false);
         // Links all our handlers together.
         model.setView(view);
-        model.setController(controller);
         view.setModel(model);
         view.setController(controller);
         controller.setModel(model);

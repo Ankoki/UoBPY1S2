@@ -25,7 +25,6 @@ public class Model {
     private static final int BALL_MOVE = 3;
 
     private View view;
-    private Controller controller;
 
     private GameObj ball;
     private GameObj secondBall;
@@ -56,15 +55,6 @@ public class Model {
      */
     public void setView(View view) {
         this.view = view;
-    }
-
-    /**
-     * Sets the controller for this model.
-     *
-     * @param controller the controller.
-     */
-    public void setController(Controller controller) {
-        this.controller = controller;
     }
 
     public void startGame(GameOptions options) {
