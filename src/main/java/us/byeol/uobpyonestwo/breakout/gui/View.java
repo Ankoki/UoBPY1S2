@@ -39,7 +39,7 @@ public class View implements EventHandler<KeyEvent> {
     private static final File DATA_FILE;
 
     static {
-        DATA_FILE = new File(System.getenv("APPDATA"), "UoBPY1S2" + File.separator + "breakout.txt"); // TODO fix C:\Users\**\AppData\Roaming\UoBPY1S2\breakout.txt (Access is denied) error.
+        DATA_FILE = new File(System.getenv("APPDATA"), "UoBPY1S2" + File.separator + "breakout.txt");
     }
 
     private final Map<String, String> data = new ConcurrentHashMap<>();
