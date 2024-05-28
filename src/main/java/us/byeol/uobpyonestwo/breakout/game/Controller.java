@@ -9,7 +9,6 @@ import us.byeol.uobpyonestwo.breakout.misc.Debug;
 public class Controller {
 
     private Model model;
-    private View view;
 
     /**
      * Creates a new controller [we specify this for debugging purposes].
@@ -25,15 +24,6 @@ public class Controller {
      */
     public void setModel(Model model) {
         this.model = model;
-    }
-
-    /**
-     * Sets the view for this controller.
-     *
-     * @param view the view.
-     */
-    public void setView(View view) {
-        this.view = view;
     }
 
     /**

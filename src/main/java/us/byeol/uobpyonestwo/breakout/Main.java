@@ -47,7 +47,6 @@ public class Main extends Application {
         view.setModel(model);
         view.setController(controller);
         controller.setModel(model);
-        controller.setView(view);
         view.showMenu();
         Debug.trace("Main::start: Breakout running");
     }

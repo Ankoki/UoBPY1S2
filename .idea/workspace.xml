@@ -4,8 +4,10 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="350a621e-e176-4b9a-b2ac-83509138bb15" name="Changes" comment="Remove unused Controller from Model.">
+    <list default="true" id="350a621e-e176-4b9a-b2ac-83509138bb15" name="Changes" comment="Remove finished TODO.">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/us/byeol/uobpyonestwo/breakout/Main.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/us/byeol/uobpyonestwo/breakout/Main.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/us/byeol/uobpyonestwo/breakout/game/Controller.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/us/byeol/uobpyonestwo/breakout/game/Controller.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -275,7 +277,14 @@
       <option name="project" value="LOCAL" />
       <updated>1716838616113</updated>
     </task>
-    <option name="localTasksCounter" value="9" />
+    <task id="LOCAL-00009" summary="Remove finished TODO.">
+      <created>1716856014991</created>
+      <option name="number" value="00009" />
+      <option name="presentableId" value="LOCAL-00009" />
+      <option name="project" value="LOCAL" />
+      <updated>1716856014991</updated>
+    </task>
+    <option name="localTasksCounter" value="10" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -298,7 +307,8 @@
     <MESSAGE value="Finished." />
     <MESSAGE value="Fix HighScore bug." />
     <MESSAGE value="Remove unused Controller from Model." />
-    <option name="LAST_COMMIT_MESSAGE" value="Remove unused Controller from Model." />
+    <MESSAGE value="Remove finished TODO." />
+    <option name="LAST_COMMIT_MESSAGE" value="Remove finished TODO." />
   </component>
   <component name="XSLT-Support.FileAssociations.UIState">
     <expand />
